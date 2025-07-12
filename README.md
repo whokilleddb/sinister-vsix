@@ -197,3 +197,70 @@ This creates a base folder called `task2` which contains the template for a basi
 
 ![](./imgs/task2_1.png)
 
+Now its time for some ffi magic. First we need to install the right libraries - which in our case is the `ffi-rs` package. Install it with:
+
+```
+npm install ffi-rs
+```
+
+with that installed, we make the following update to our `extension.ts` code:
+
+```ts
+import * as vscode from 'vscode';
+import { open, load, DataType, close } from 'ffi-rs';
+
+function sayhi () {
+    // Open the user32 library
+    open({
+        library: "user32",
+        path: "C:\\Windows\\System32\\user32.dll"
+    });
+
+    const r = load({
+            library: 'user32',
+            funcName: 'MessageBoxA',
+            retType: DataType.I32,
+            paramsType: [DataType.Void, DataType.String, DataType.String, DataType.I32],
+                        paramsValue: [
+                0, // null pointer for hWnd
+                'Hello World from VS Code Extension!',
+                'Extension Activated',
+                0 // MB_OK
+            ]
+        });
+}
+
+export function activate(context: vscode.ExtensionContext) {
+
+	sayhi();
+
+	const disposable = vscode.commands.registerCommand('task2.helloWorld', () => {
+		vscode.window.showInformationMessage('Hello World from Task2!');
+	});
+
+	context.subscriptions.push(disposable);
+}
+
+export function deactivate() {}
+
+```
+
+We create a `sayhi()` function which essentially pops up a messaage box by calling the `MessageBoxA` winapi from `user32.dll` 
+
+Hitting F5 again and running the `Hello World` command pops up the message box! 
+
+![](./imgs/task2_2.png)
+
+So with this, we can say that we can use FFI to run shellcode - time to move onto the next experiment!
+
+----
+
+While researching for the FFI part, I came across two more modules:
+- https://napi.rs/
+- https://neon-rs.dev/docs/quick-start/
+
+So this gave me the idea for the next task :
+
+> Task #3: Put rust in javascript (because clearly i have nothing better to do in life)
+
+----
