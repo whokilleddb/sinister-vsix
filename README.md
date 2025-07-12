@@ -161,8 +161,39 @@ Running the following script as follows gives us a sweet sweet Message Box pop-u
 node index.js
 ```
 
-![](./imgs/test1.png)
+![](./imgs/task1.png)
 
 So with this, our **Test#1** has been concluded successfully! Time to move onto the next part.
 
 ---
+
+## Wait - why not use FFI?
+
+At this point, some keen readers might be asking: _Why do we need all this C++ stuff? Why not use something like [node-ffi](https://github.com/node-ffi/node-ffi)?_
+
+And the answer is: I AM STUPID
+
+I had tried playing with things like [ffi-napi](https://www.npmjs.com/package/ffi-napi) and [node-ffi](https://github.com/node-ffi/node-ffi) libraries but could not get them to work due to some problems with electrons - but during writing this blog, I dipped my toe in it again and this time, I got it working! 
+
+![](https://i.imgur.com/XJyemeI.jpeg)
+
+So, time for another task -
+
+> Task #2: Create a VS Code extension and pop a hello world message box from it using FFI! 
+
+----
+
+## Task #2 
+
+First, we need to create a VS Code extension. For this, we would be using the [following guide](https://code.visualstudio.com/api/get-started/your-first-extension). The guide requires you to install `yo` and `generator-code`.
+
+Once you have installed the packages, create a 
+
+```bash
+yo code --skip-cache --ask-answered --open --extensionType ts --pkgManager npm  --extensionDisplayName Task2 --quick task2
+```
+
+This creates a base folder called `task2` which contains the template for a basic extension. The main source code for the extension is stored in `src/extension.ts`. Hitting F5 with the `extension.ts` focused pops up another Visual Stuido Code. Bringing up the Visual Studio Prompt and searching for `Hello World` title and selecting it would pop up a message in the Debug Console of the original window - showing that our extension works!
+
+![](./imgs/task2_1.png)
+
