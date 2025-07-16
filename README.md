@@ -253,14 +253,21 @@ Hitting F5 again and running the `Hello World` command pops up the message box!
 
 So with this, we can say that we can use FFI to run shellcode - time to move onto the next experiment!
 
+> Note: we are still using .node files beneath the hood. For example, if you install the extension, you will find the module at: `%userprofile%\.vscode\extensions\<publisher_name>.task2-0.0.1\node_modules\@yuuang\ffi-rs-win32-x64-msvc\ffi-rs.win32-x64-msvc.node`
+
 ----
 
 While researching for the FFI part, I came across two more modules:
 - https://napi.rs/
-- https://neon-rs.dev/docs/quick-start/
+- https://neon-rs.dev/
 
 So this gave me the idea for the next task :
 
 > Task #3: Put rust in javascript (because clearly i have nothing better to do in life)
 
 ----
+
+We would be using [neon-rs](https://neon-rs.dev/) for now. I highly recommend going through the [hello world](https://neon-rs.dev/docs/hello-world) example as we would be getting pointers from that tutorial. 
+
+Again, create a new extension with:
+yo code --skip-cache --ask-answered --open --extensionType ts --pkgManager npm  --extensionDisplayName Task3 --quick task3
