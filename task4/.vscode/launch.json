@@ -1,0 +1,63 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Launch Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+			"skipFiles": ["<node_internals>/**/*.js", "**/node_modules/**/*.js"],
+			"smartStep": true,
+			"sourceMaps": true,
+		},
+		{
+			"name": "Watch & Launch Extension",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": ["--extensionDevelopmentPath=${workspaceFolder}"],
+			"skipFiles": ["<node_internals>/**/*.js", "**/node_modules/**/*.js"],
+			"preLaunchTask": "npm: watch",
+			"smartStep": true,
+			"sourceMaps": true,
+		},
+		{
+			"name": "Extension Tests",
+			"type": "extensionHost",
+			"request": "launch",
+			"runtimeExecutable": "${execPath}",
+			"args": [
+				"--disable-extensions",
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionTestsPath=${workspaceFolder}/out/test/suite/index"
+			],
+		},
+
+		{
+			"name": "Extension and JS Debug Companion",
+			"type": "extensionHost",
+			"request": "launch",
+			"skipFiles": [
+			  "<node_internals>/**"
+			],
+			"args": [
+			  "--extensionDevelopmentPath=${workspaceFolder}/../vscode-js-debug-companion",
+			  "--extensionDevelopmentPath=${workspaceFolder}/"
+			],
+			"env": {
+			  "JS_DEBUG_USE_COMPANION": "1"
+			},
+			"trace": true,
+			"resolveSourceMapLocations": [
+			  "${workspaceFolder}/**",
+			  "${workspaceFolder}/../vscode-js-debug-companion/**",
+			  "!**/node_modules/**"
+			],
+			"outFiles": [
+			  "${workspaceFolder}/out/**/*.js",
+			  "${workspaceFolder}/../vscode-js-debug-companion/out/**/*.js"
+			]
+		  },
+	]
+}
