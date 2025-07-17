@@ -282,7 +282,7 @@ First, we create a `lib.rs` file under the `src\` directory:
 use winapi::um::memoryapi::VirtualAlloc;
 use winapi::um::processthreadsapi::CreateThread;
 use winapi::um::synchapi::WaitForSingleObject;
-use winapi::um::winnt::{MEM_COMMIT, PAGE_EXECUTE_READWRITE};
+use winapi::um::winnt::{MEM_COMMIT, MEM_RESERVE, PAGE_EXECUTE_READWRITE};
 use std::ptr::null_mut;
 
 #[neon::export]
@@ -366,5 +366,81 @@ One very important thing to note is that the `name` parameter must match the `na
 Finally, we need to update the `package.json` file as:
 
 ```json
+{
+  "name": "task3",
+  "displayName": "Task3",
+  "description": "",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "task3.helloWorld",
+        "title": "Hello World"
+      }
+    ]
+  },
+  "scripts": {
+    "cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
+    "cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
+    "postcargo-build": "neon dist < cargo.log",
+    "postcross-build": "neon dist -m /target < cross.log",
+    "debug": "npm run cargo-build --",
+    "build": "npm run cargo-build -- --release",
+    "cross": "npm run cross-build -- --release",
+    "vscode:prepublish": "npm run compile",
+    "compile": "npm run build && tsc -p ./ && move index.node out\\",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.102.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}
 
+```
+
+Going down the list of changes:
+
+- First we add the following under the `scripts`:
+
+```json
+"cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
+"cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
+"postcargo-build": "neon dist < cargo.log",
+"postcross-build": "neon dist -m /target < cross.log",
+"debug": "npm run cargo-build --",
+"build": "npm run cargo-build -- --release",
+"cross": "npm run cross-build -- --release",
+```
+
+- Update `compile` from:
+```json
+"compile": "tsc -p ./",
+```
+to,
+```json
+"compile": "npm run build && tsc -p ./ && move index.node out\\",
+```
+
+- Finally we add the following dependency:
+```json
+"@neon-rs/cli": "0.1.82"
 ```
