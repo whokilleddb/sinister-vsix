@@ -481,3 +481,38 @@ The only modification we have made to this templated code is adding the followin
 require(".").hello();
 ```
 
+This essentially loads the `index.node` addon and calls the `hello()` function it exports. 
+
+Now, lets create a vscode extension with the following command:
+
+```
+vsce package
+```
+
+![](./imgs/task3_1.png)
+
+This should produce a `.vsix` file which we can install with:
+
+```bash
+$ code --install-extension .\task3-0.0.1.vsix
+```
+
+We sholuld now be able to see the extension under the VSCode Extensions tab:
+
+![](./imgs/task3_2.png)
+
+Running the usual `Hello World` task should run the shellcode:
+
+![](./imgs/task3_3.png)
+
+Also, looking at process hacker we can see the Node addon being loaded(note how the type is marked as a `DLL`) and addon also being shown under the loaded modules tab. 
+
+This marks the conclusion of Task #3 
+
+----
+
+This leaves us with one last task: 
+
+> Task #4: Backdoor a legit VSCode extension using this technique
+
+----
