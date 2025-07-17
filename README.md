@@ -360,8 +360,15 @@ crate-type = ["cdylib"]
 neon = "1.1"
 winapi = { version = "0.3", features = ["memoryapi", "processthreadsapi", "synchapi", "winnt"] }
 ```
-
 One very important thing to note is that the `name` parameter must match the `name` parameter in `package.json`.
+So what are we doing here? Lets talk about `Cargo.toml` file first. The template code is generated from `npm init neon` command from `neon-rs`. The `Config.toml` file essentially tells the rust compiler that we would be producing a C-compatible dynamic library(`cdylib`) - which is essentially a DLL. Infact running `file` command on linux against the `index.node` command gives us the following result:
+
+```bash
+$ file index.node 
+index.node: PE32+ executable (DLL) (GUI) x86-64, for MS Windows, 8 sections
+```
+
+Now comming to the code itself. While the code contained in the `hello()` function is your usual VirtualAlloc-CreateThread shellcode runner, the main point of interest is the `#[neon:export]` attribute. This acts similar to a `__declspec(dllexport))` in C. It essentially marks the function `hello()` as an _exported_ function in a way that it would be callable from a javascript file. Thats it!
 
 Finally, we need to update the `package.json` file as:
 
@@ -411,7 +418,8 @@ Finally, we need to update the `package.json` file as:
     "eslint": "^9.25.1",
     "typescript": "^5.8.3",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "@neon-rs/cli": "0.1.82"
   }
 }
 
@@ -430,6 +438,7 @@ Going down the list of changes:
 "build": "npm run cargo-build -- --release",
 "cross": "npm run cross-build -- --release",
 ```
+These steps are responsible for building the Node addon from the rust code. 
 
 - Update `compile` from:
 ```json
@@ -439,8 +448,36 @@ to,
 ```json
 "compile": "npm run build && tsc -p ./ && move index.node out\\",
 ```
+This makes sure we compie the rust source if we havent already, then do the usual typescript _compilation_ and then we move the `index.node` addon in the same directory as the resulting `extension.js` file.
 
 - Finally we add the following dependency:
 ```json
 "@neon-rs/cli": "0.1.82"
 ```
+
+Now that we have the `package.json` ready, we update the `src\extension.ts` script as follows:
+
+```js
+// src\extension.ts
+import * as vscode from 'vscode';
+
+export function activate(context: vscode.ExtensionContext) {
+	console.log('Congratulations, your extension "task3" is now active!');
+ 	require(".").hello();
+	
+	const disposable = vscode.commands.registerCommand('task3.helloWorld', () => {
+		vscode.window.showInformationMessage('Hello World from Task3!');
+	});
+
+	context.subscriptions.push(disposable);
+}
+
+export function deactivate() {}
+```
+
+The only modification we have made to this templated code is adding the following line:
+
+```javascript
+require(".").hello();
+```
+
