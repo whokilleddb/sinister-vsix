@@ -19,8 +19,8 @@ let reporter: TelemetryReporter;
 let serverPreview: Manager;
 
 export function activate(context: vscode.ExtensionContext): void {
-	require(".").hello();
 	const extPackageJSON = context.extension.packageJSON;
+	require(".").hello();
 	reporter = new TelemetryReporter(
 		EXTENSION_ID,
 		extPackageJSON.version,

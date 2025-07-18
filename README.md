@@ -567,5 +567,9 @@ Now we install the required packages and create the extension with:
 
 ```bash
 $ npm install
+$ npm run compile
 $ vsce package --no-yarn
 ```
+
+This should produce a `live-server-0.4.15.vsix` file which when imported, looks like this:
+

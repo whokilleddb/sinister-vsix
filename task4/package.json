@@ -305,6 +305,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@neon-rs/cli": "0.1.82",
     "@types/mime": "^3.0.1",
     "@types/mocha": "^9.0.0",
     "@types/node": "^18.7.18",
@@ -326,8 +327,7 @@
     "ts-loader": "^9.3.1",
     "typescript": "^4.8.3",
     "webpack": "^5.94.0",
-    "webpack-cli": "^4.10.0",
-    "@neon-rs/cli": "0.1.82"
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
     "@types/express": "^4.17.17",
@@ -335,6 +335,7 @@
     "mime": "^3.0.0",
     "url": "^0.11.0",
     "vscode-extension-telemetry": "^0.4.5",
-    "ws": "^8.17.1"
+    "ws": "^8.17.1",
+    "yarn": "^1.22.22"
   }
 }
