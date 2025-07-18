@@ -42,6 +42,15 @@ const config = {
 				exclude: /node_modules/,
 				use: 'ts-loader',
 			},
+			{
+				test: /\.node$/,
+				use: [
+				{
+					loader: 'native-addon-loader',
+				}
+				]
+			}
+			
 		],
 	},
 
