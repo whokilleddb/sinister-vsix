@@ -1,4 +1,4 @@
-# Sinister VSIx - Experimenting with C++, Node JS and Electron till I lose my mind
+# Sinister VSIX Blog - Experimenting with C++, Node JS and Electron till I lose my mind
 
 [!["Buy Me A Coffee"](https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png)](https://www.buymeacoffee.com/whokilleddb)
 
