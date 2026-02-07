@@ -11,3 +11,5 @@ media/codicon*
 media/extension*
 .devcontainer/*
 *.node
+*.bin
+__pycache__/
