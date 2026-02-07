@@ -24,9 +24,11 @@ r"""
 def main():
     banner()
     cli_args = parse_args()
-    print(cli_args)
 
-    gen = Generator(cli_args.ext, cli_args.shellcode, cli_args.inflate, cli_args.enc)
+    gen = Generator(cli_args.ext, cli_args.shellcode, cli_args.enc)
+
+    # template files
+    gen.template_files()
 
 if __name__ == "__main__":
     main()

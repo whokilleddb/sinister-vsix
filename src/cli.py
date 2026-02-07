@@ -17,12 +17,12 @@ def parse_args():
         help="Shell file (required)"
     )
 
-    parser.add_argument(
-        "-i", "--inflate",
-        type=int,
-        default=100,
-        help="Inflate value (whole number, default: 100)"
-    )
+    # parser.add_argument(
+    #     "-i", "--inflate",
+    #     type=int,
+    #     default=100,
+    #     help="Inflate value (whole number, default: 100)"
+    # )
 
     parser.add_argument(
         "--enc",
@@ -33,8 +33,8 @@ def parse_args():
 
     args = parser.parse_args()
 
-    if args.inflate < 0:
-        parser.error("--inflate must be a whole number")
+    # if args.inflate < 0:
+    #     parser.error("--inflate must be a whole number")
 
     abspath = os.path.abspath(args.shellcode)
     if (not os.path.exists(abspath)) or (not os.path.isfile(abspath)):
