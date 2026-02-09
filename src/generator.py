@@ -9,7 +9,6 @@ from tempfile import TemporaryDirectory
 
 from src.extensions.livepreview import LivePreview
 from src.misc import *
-from tqdm import tqdm
 
 
 class Generator:
@@ -66,7 +65,7 @@ class Generator:
         cw = os.getcwd()
         _neon_rs = os.path.join(self.tmp, "node_modules", ".bin", "neon")
         print("[+] Installing dependencies")
-        
+
         try:
             os.chdir(self.tmp)
             
