@@ -45,12 +45,11 @@ class Generator:
         for _p in _v:
             s = shutil.which(_p)
             if s:
-                print(f"[+] {_p} found in:\t{s}")
+                print(f"[+] {_p} found in:\t\t\t{s}")
             else:
                 print(f"[-] Did not find required program:\t{_p}")
                 sys.exit(-1)
     
-        
     def template_files(self):
         """template files for compilation"""
 
