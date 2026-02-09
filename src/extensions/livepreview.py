@@ -10,4 +10,5 @@ class LivePreview(BaseExtension):
         self.template_path = os.path.join(
             os.getcwd(), "templates", "livepreview"
         )
+        self.vsix = "live-server-0.4.15.vsix"
         

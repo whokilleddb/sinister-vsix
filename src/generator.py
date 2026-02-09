@@ -71,13 +71,18 @@ class Generator:
             # Install neon-rs
             run_cmd_check_file("npm install", [_neon_rs])
 
+            if not shutil.where("vsce"):
+                print("[*] Could not locate vsce")
+                _so, _se, _rc = run_cmd("npm install -g vsce")
+                if _rc != 0:
+                    print("[-] Failed to install vsce")
+                    sys.exit(-1)
+
         except:
-            pass
-
+            os.chdir(cw)
+            sys.exit(-1)
+            
         os.chdir(cw)
-
-
-
 
     def compile(self):
         """Compile files"""
