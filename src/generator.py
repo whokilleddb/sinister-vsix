@@ -38,14 +38,15 @@ class Generator:
     def template_files(self):
         """template files for compilation"""
 
-        # Copy shellcode file
-        temp_shellcode = os.path.join(self.tmp, "../payload.bin")
-        shutil.copyfile(self.shellcode, temp_shellcode)
-        print("[+] Shellcode copied to:\t\t"+temp_shellcode) 
-
         # First copy vs files into temp directory 
         copy_dir_contents(self.ext.template_path, self.tmp)
         print("[+] Template JS copied to:\t\t" + self.tmp) 
+
+        # Copy shellcode file
+        temp_shellcode = os.path.join(self.tmp, "src", "payload.bin")
+        shutil.copyfile(self.shellcode, temp_shellcode)
+        print("[+] Shellcode copied to:\t\t"+temp_shellcode) 
+
 
         # Copy rust files 
         rust_files = ["Cargo.toml", "Cargo.lock", os.path.join("src", "lib.rs")]
