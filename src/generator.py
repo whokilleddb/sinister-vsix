@@ -2,6 +2,7 @@
 Contains the class responsible for building things
 """
 import os
+import sys
 import shutil
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -29,11 +30,26 @@ class Generator:
         self.enc = enc
         self._tmp = TemporaryDirectory(delete=False)
         self.tmp = self._tmp.name
-        print("[+] Temporary build directory:\t\t"+self.tmp)
+        # print("[+] Temporary build directory:\t\t"+self.tmp)
 
         _ext = ext.lower()
         if _ext == "livepreview":
             self.ext = LivePreview()
+
+    def check_prerequisites(self):
+        """Check files"""
+        if os.name != 'nt':
+            print("[-] This program can only be run on WINDOWS (for now)")
+
+        _v = ["npm", "cargo"]
+        for _p in _v:
+            s = shutil.which(_p)
+            if s:
+                print(f"[+] {_p} found in:\t{s}")
+            else:
+                print(f"[-] Did not find required program:\t{_p}")
+                sys.exit(-1)
+    
         
     def template_files(self):
         """template files for compilation"""

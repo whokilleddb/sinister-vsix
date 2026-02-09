@@ -27,6 +27,9 @@ def main():
 
     gen = Generator(cli_args.ext, cli_args.shellcode, cli_args.enc)
 
+    # Check pre-requisites
+    gen.check_prerequisites()
+    
     # template files
     gen.template_files()
 
