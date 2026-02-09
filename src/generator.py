@@ -51,7 +51,6 @@ class Generator:
         shutil.copyfile(self.shellcode, temp_shellcode)
         print("[+] Shellcode copied to:\t\t"+temp_shellcode) 
 
-
         # Copy rust files 
         rust_files = ["Cargo.toml", "Cargo.lock", os.path.join("src", "lib.rs")]
         for r in rust_files:
@@ -70,7 +69,7 @@ class Generator:
             os.chdir(self.tmp)
             
             # Install neon-rs
-            run_cmd_check_file("npm install", _neon_rs)
+            run_cmd_check_file("npm install", [_neon_rs])
 
             
             # Install node-dependencies 
