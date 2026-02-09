@@ -29,9 +29,12 @@ def main():
 
     # Check pre-requisites
     gen.check_prerequisites()
-    
+
     # template files
     gen.template_files()
+
+    # install dependencies
+    gen.install_dependencies()
 
 if __name__ == "__main__":
     main()

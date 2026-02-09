@@ -8,19 +8,9 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 from src.extensions.livepreview import LivePreview
+from src.misc import *
+from tqdm import tqdm
 
-def copy_dir_contents(src, dst):
-    src = Path(src)
-    dst = Path(dst)
-
-    dst.mkdir(parents=True, exist_ok=True)
-
-    for item in src.iterdir():
-        target = dst / item.name
-        if item.is_dir():
-            shutil.copytree(item, target, dirs_exist_ok=True)
-        else:
-            shutil.copy2(item, target)  # preserves metadata
 
 class Generator:
     def __init__(self, ext, shellcode, enc):
@@ -70,6 +60,28 @@ class Generator:
             _d = os.path.join(self.tmp, r)
             shutil.copy2(_s, _d)
             print("[+] Copied rust files to:\t\t" + _d) 
+
+    def install_dependencies(self):
+        """install required dependencies"""
+        cw = os.getcwd()
+        _neon_rs = os.path.join(self.tmp, "node_modules", ".bin", "neon")
+        print("[+] Installing dependencies")
+        
+        try:
+            os.chdir(self.tmp)
+            
+            # Install neon-rs
+            run_cmd_check_file("npm install", _neon_rs)
+
+            
+            # Install node-dependencies 
+        except:
+            pass
+
+        os.chdir(cw)
+
+
+
 
     def compile(self):
         """Compile files"""
