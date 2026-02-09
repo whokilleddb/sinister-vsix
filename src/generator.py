@@ -30,7 +30,7 @@ class Generator:
         if os.name != 'nt':
             print("[-] This program can only be run on WINDOWS (for now)")
 
-        _v = ["npm", "cargo"]
+        _v = ["npm", "cargo", "node"]
         for _p in _v:
             s = shutil.which(_p)
             if s:
@@ -71,8 +71,6 @@ class Generator:
             # Install neon-rs
             run_cmd_check_file("npm install", [_neon_rs])
 
-            
-            # Install node-dependencies 
         except:
             pass
 
