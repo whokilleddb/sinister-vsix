@@ -73,7 +73,7 @@ class Generator:
             # Install neon-rs
             run_cmd_check_file("npm install", [_neon_rs])
 
-            if not shutil.where("vsce"):
+            if not shutil.which("vsce"):
                 print("[*] Could not locate vsce")
                 _so, _se, _rc = run_cmd("npm install -g vsce")
                 if _rc != 0:
@@ -96,6 +96,7 @@ class Generator:
         cw = os.getcwd()
         vsix = os.path.join(self.tmp, self.ext.vsix)
         try:
+            print("[+] Compiling your payload")
             os.chdir(self.tmp)
             run_cmd_check_file("vsce package", [vsix])
             print("[+] Successfully produced VSIX package:\t"+vsix)
