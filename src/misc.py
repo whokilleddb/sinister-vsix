@@ -40,7 +40,7 @@ def run_cmd_check_file(cmd, files: list):
             if stderr:
                 print(f"[-] STDERR:\n{stderr}")
 
-            raise Exception(f"Command `{cmd}` failed to produce `{file}`")
+            raise FileNotFoundError(f"Command `{cmd}` failed to produce `{file}`")
         
 def copy_dir_contents(src, dst):
     src = Path(src)

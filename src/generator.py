@@ -4,6 +4,7 @@ Contains the class responsible for building things
 import os
 import sys
 import shutil
+import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -77,9 +78,14 @@ class Generator:
                 _so, _se, _rc = run_cmd("npm install -g vsce")
                 if _rc != 0:
                     print("[-] Failed to install vsce")
+                    if _so:
+                        print(f"[-] STDOUT:\b{_so}")
+                    if _se:
+                        print(f"[-] STDOUT:\b{_se}")
                     sys.exit(-1)
 
-        except:
+        except FileNotFoundError as e:
+            print(f"[-] Exception occured as:\t{e}")
             os.chdir(cw)
             sys.exit(-1)
             
@@ -88,10 +94,19 @@ class Generator:
     def compile(self):
         """Compile files"""
         cw = os.getcwd()
+        vsix = os.path.join(self.tmp, self.ext.vsix)
         try:
             os.chdir(self.tmp)
-
-        except Exception as e:
+            run_cmd_check_file("vsce package", [vsix])
+            print("[+] Successfully produced VSIX package:\t"+vsix)
+            tgt_vsix = os.path.join(
+                os.getcwd(), 
+                "output", 
+                f"{datetime.datetime.now().strftime('%Y_%m_%dT_%H_%M_%S')}_{self.ext.vsix}")
+            shutil.copy2(vsix, tgt_vsix)
+            print(f"[+] Final payload available at:\t{tgt_vsix}")
+        except FileNotFoundError as e:
+            print(f"[-] Failed to produce target vsce:\t{vsix}")
             pass
         os.chdir(cw)
     
