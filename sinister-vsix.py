@@ -36,5 +36,8 @@ def main():
     # install dependencies
     gen.install_dependencies()
 
+    # compile
+    gen.compile()
+
 if __name__ == "__main__":
     main()
