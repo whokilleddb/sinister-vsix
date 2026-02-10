@@ -98,7 +98,7 @@ class Generator:
         try:
             print("[+] Compiling your payload")
             os.chdir(self.tmp)
-            run_cmd_check_file("vsce package", [vsix])
+            run_cmd_check_file("vsce package --no-yarn", [vsix])
             print("[+] Successfully produced VSIX package:\t"+vsix)
             tgt_vsix = os.path.join(
                 os.getcwd(), 
