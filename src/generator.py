@@ -29,6 +29,7 @@ class Generator:
         """Check files"""
         if os.name != 'nt':
             print("[-] This program can only be run on WINDOWS (for now)")
+            sys.exit(-1)
 
         _v = ["npm", "cargo", "node"]
         for _p in _v:
