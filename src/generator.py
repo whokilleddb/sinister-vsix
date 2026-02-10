@@ -100,14 +100,16 @@ class Generator:
             os.chdir(self.tmp)
             run_cmd_check_file("vsce package --no-yarn", [vsix])
             print("[+] Successfully produced VSIX package:\t"+vsix)
-            tgt_vsix = os.path.join(
-                os.getcwd(), 
-                "output", 
-                f"{datetime.datetime.now().strftime('%Y_%m_%dT_%H_%M_%S')}_{self.ext.vsix}")
-            shutil.copy2(vsix, tgt_vsix)
-            print(f"[+] Final payload available at:\t{tgt_vsix}")
+
         except FileNotFoundError as e:
             print(f"[-] Failed to produce target vsce:\t{vsix}")
             pass
+
+        tgt_vsix = os.path.join(
+            os.getcwd(), 
+            "output", 
+            f"{datetime.datetime.now().strftime('%Y_%m_%dT_%H_%M_%S')}_{self.ext.vsix}")
+        shutil.copy2(vsix, tgt_vsix)
+        print(f"[+] Final payload available at:\t{tgt_vsix}")
         os.chdir(cw)
     
