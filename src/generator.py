@@ -103,13 +103,13 @@ class Generator:
 
         except FileNotFoundError as e:
             print(f"[-] Failed to produce target vsce:\t{vsix}")
-            pass
+            os.chdir(cw)
+            sys.exit(-1)
 
+        os.chdir(cw)
         tgt_vsix = os.path.join(
             os.getcwd(), 
             "output", 
             f"{datetime.datetime.now().strftime('%Y_%m_%dT_%H_%M_%S')}_{self.ext.vsix}")
         shutil.copy(vsix, tgt_vsix)
         print(f"[+] Final payload available at:\t{tgt_vsix}")
-        os.chdir(cw)
-    
