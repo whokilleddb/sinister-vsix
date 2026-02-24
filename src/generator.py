@@ -112,4 +112,4 @@ class Generator:
             "output", 
             f"{datetime.datetime.now().strftime('%Y_%m_%dT_%H_%M_%S')}_{self.ext.vsix}")
         shutil.copy(vsix, tgt_vsix)
-        print(f"[+] Final payload available at:\t{tgt_vsix}")
+        print(f"[+] Final payload available at:\t\t{tgt_vsix}")
